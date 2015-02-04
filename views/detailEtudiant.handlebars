@@ -1,0 +1,19 @@
+{{> enTete}}
+{{> menu}}
+ <h1>Détail sur l'étudiant {{this.per_nom}}</h1>
+ <p>Actuellement, il y a {{nbPersonne}} enregistrées</p>
+ <table>
+ 	<tr>
+ 		<th>Prénom</th>
+ 		<th>Mail</th>
+ 		<th>Tel</th>
+ 		<th>Département</th>
+ 		<th>Ville</th>
+ 	</tr>
+ 	{{#each infoEtudiant}}
+ 		<tr><td>{{this.per_prenom}}</td>
+ 			<td>{{this.per_mail}}</td>
+ 			<td>{{this.dep_nom}}</td>
+ 			<td>{{this.vil_nom}}</td></tr>
+ 	{{/each}}
+ </table>
