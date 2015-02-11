@@ -23,6 +23,7 @@ module.exports = function(app){
 
 // connection
    app.get('/connect', ConnectController.Connect);
+   app.post('/connection', ConnectController.Connection)
    app.get('/deconnect', ConnectController.Deconnect);
 
 

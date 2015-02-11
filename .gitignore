@@ -4,3 +4,4 @@
 # Ignorer tous le repertoire node_modules
 node_modules/*
 configDb.js
+npm-debug.log
