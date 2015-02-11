@@ -1,7 +1,6 @@
 {{> enTete}}
 {{> menu}}
- <h1>Détail sur l'étudiant {{this.per_nom}}</h1>
- <p>Actuellement, il y a {{nbPersonne}} enregistrées</p>
+ <h1>Détail sur le salarié {{infoSalarie.per_nom}}</h1>
  <table>
  	<tr>
  		<th>Prénom</th>
@@ -10,10 +9,9 @@
  		<th>Tel pro</th>
  		<th>Fonction</th>
  	</tr>
- 	{{#each infoSalarie}}
- 		<tr><td>{{this.per_prenom}}</td>
- 			<td>{{this.per_mail}}</td>
- 			<td>{{this.sal_telprof}}</td>
- 			<td>{{this.fon_libelle}}</td></tr>
- 	{{/each}}
+ 	<tr><td>{{infoSalarie.per_prenom}}</td>
+ 		<td>{{infoSalarie.per_mail}}</td>
+ 		<td>{{infoSalarie.per_tel}}</td>
+ 		<td>{{infoSalarie.sal_telprof}}</td>
+ 		<td>{{infoSalarie.fon_libelle}}</td></tr>
  </table>

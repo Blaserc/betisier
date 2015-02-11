@@ -26,33 +26,35 @@ module.exports.DetailPersonne = function(request, response){
             console.log(err);
             return;
         }
-   response.nbResul = result.length;
-	});
+    var status = "etu";
+    if(result.length == 0){
+      status = "prof";
+    }
+	
   //Il ne connait pas la variable nbResul => il faut la faire sortir de la requête
-	if (nbResul == 0){
+	if (status == "prof"){
 		//C'est un salarié, requête pour récupérer ses infos
-    model.getInfoSalarie(id, function (err, response){
+    model.getInfoSalarie(id, function (err, result){
       if(err){
         console.log(err);
         return;
       }
-      response.statut = "le salarié";
-      response.infoSalarie = result;
+      response.infoSalarie = result[0];
       response.render('detailSalarie', response);
     });
 	}
 	else {
 		//C'est un étudiant, requête pour récupérer ses infos
-    model.getInfoEtudiant(id, function (err, response){
+    model.getInfoEtudiant(id, function (err, result){
       if(err){
         console.log(err);
         return;
       }
-      response.statut = "l'étudiant";
-      response.infoEtudiant = result;
+      response.infoEtudiant = result[0];
       response.render('detailEtudiant', response);
     });
 	}
+  });
 };
 // ////////////////////////////////////////////// A J O U T E R     P E R S O N N E S 
    

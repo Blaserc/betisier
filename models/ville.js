@@ -23,3 +23,23 @@ module.exports.getListeVille = function (callback) {
          }
       });   
 };
+
+module.exports.getVilleByName = function (data, callback) {
+  db.getConnection(function(err, connexion){
+    if(!err){
+      var req = "SELECT vil_nom FROM ville WHERE vil_nom = " + connexion.escape(data);
+      connexion.query(req, callback);
+      connexion.release();
+    }
+  });
+};
+
+module.exports.insertVille = function (data, callback) {
+  db.getConnection(function(err, connexion){
+    if(!err){
+      var req = "INSERT INTO ville (vil_nom) VALUES ('" + connexion.escape(data) +"')";
+      connexion.query(req, callback);
+      connexion.release();
+    }
+  });
+};

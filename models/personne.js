@@ -41,7 +41,7 @@ module.exports.getListePersonne = function (callback) {
 module.exports.isEtudiant = function(data, callback){
    db.getConnection(function(err, connexion){
       if(!err){
-         var req = "SELECT * FROM etudiant WHERE per_num = " + data;
+         var req = "SELECT per_num FROM etudiant WHERE per_num = " + data;
          connexion.query(req, callback);
          connexion.release();
       }
@@ -61,7 +61,7 @@ module.exports.getInfoPersonne = function(data, callback){
 module.exports.getInfoEtudiant = function(data, callback){
    db.getConnection(function(err, connexion){
       if(!err){
-         var req = "SELECT dep_nom, vil_nom, per_nom, per_prenom, per_mail, per_tel FROM personne p JOIN etudiant e ON p.per_num = e.per_num JOIN departement d ON e.dep_num = d.dep_num JOIN ville v ON d.vil_num = v.vil_num WHERE per_num = " + data;
+         var req = "SELECT dep_nom, vil_nom, per_nom, per_prenom, per_mail, per_tel FROM personne p JOIN etudiant e ON p.per_num = e.per_num JOIN departement d ON e.dep_num = d.dep_num JOIN ville v ON d.vil_num = v.vil_num WHERE e.per_num = " + data;
          connexion.query(req, callback);
          connexion.release();
       }
@@ -71,7 +71,7 @@ module.exports.getInfoEtudiant = function(data, callback){
 module.exports.getInfoSalarie = function(data, callback){
    db.getConnection(function(err, connexion){
       if(!err){
-         var req = "SELECT sal_telprof, fon_libelle, per_nom, per_prenom, per_mail, per_tel FROM personne p JOIN salarie s ON p.per_num = s.per_num JOIN fonction f ON s.fon_num = f.fon_num WHERE per_num = " + data;
+         var req = "SELECT sal_telprof, fon_libelle, per_nom, per_prenom, per_mail, per_tel FROM personne p JOIN salarie s ON p.per_num = s.per_num JOIN fonction f ON s.fon_num = f.fon_num WHERE s.per_num = " + data;
          connexion.query(req, callback);
          connexion.release();
       }

@@ -1,3 +1,17 @@
 {{> enTete}}
 {{> menu}}
 <h1>Ajouter une ville</h1>
+
+{{#if etat }}
+	<form name="ajoutVille" action="/villeAjoutee" method="POST">
+		<label for="nom">Nom</label>
+		<input name="nom" type="text">
+		<input type="submit" value="Ajouter">
+	</form>
+{{else}}
+	{{#if erreur}}
+		<img src="/image/erreur.png"/> {{erreur}}
+	{{else}}
+		<img src="/image/valid.png"/> La ville <strong>"{{this.nom}}"</strong> a été ajouté.
+	{{/if}}
+{{/if}}

@@ -36,6 +36,7 @@ module.exports.ListerVille = function(request, response){
 module.exports.AjouterVille = function(request, response){
 
    response.title = 'Ajouter des villes';
+   response.etat = 'Ajout';
 	
    response.render('ajoutVille', response);
 };  
@@ -43,9 +44,28 @@ module.exports.AjouterVille = function(request, response){
    // ////////////////////////////////////////////// I N S E R E R     V I L L E 
  
 module.exports.InsertVille = function(request, response){
-    response.title = 'Insertion d\'une ville'; 
- 
- 	response.render('ajoutVille', response);
+  response.title = 'Insertion d\'une ville';
+  var nom = request.body.nom;
+  response.nom = nom;
+  model.getVilleByName(nom, function(err, result){
+    if(err){
+      console.log(err);
+      return;
+    }
+    if(result.length == 0){
+      model.insertVille(nom, function(err, result){
+        if(err){
+          console.log(err);
+          return;
+        }
+        response.render('ajoutVille', response);
+      });
+    }
+    else{
+      response.erreur = "La ville a déjà été ajoutée."
+      response.render('ajoutVille', response);
+    }
+  });
 };
 
    // ////////////////////////////////////////////// M O D I F I E R     V I L L E
