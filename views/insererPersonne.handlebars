@@ -1,0 +1,8 @@
+{{> enTete}}
+{{> menu}}	
+<h1>Ajouter des personnes</h1>
+{{#if resultatNeg}}
+	<img src="/image/erreur.png"/> {{resultatNeg}}
+{{else}}
+	<img src="/image/valid.png"/> {{resultatPos}} a bien été ajouté !
+{{/if}}
