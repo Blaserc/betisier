@@ -18,7 +18,7 @@ module.exports.Deconnect = function(request, response){
      response.statu = 'Vous avez bien été déconnecté.';
      response.img = 'valid.png';
      response.res = 'Valide !';
-	 response.redirect('connection', response);
+	 response.render('connection', response);
 };
 
 module.exports.Connection= function(request, response){

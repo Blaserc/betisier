@@ -23,8 +23,9 @@ module.exports = function(app){
 
 // connection
    app.get('/connect', ConnectController.Connect);
-   app.post('/connection', ConnectController.Connection)
+   app.post('/connection', ConnectController.Connection);
    app.get('/deconnect', ConnectController.Deconnect);
+   app.get('/connection', ConnectController.Connection);
 
  //personne
    app.get('/listerPersonne', PersonneController.ListerPersonne);
