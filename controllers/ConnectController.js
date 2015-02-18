@@ -19,12 +19,14 @@ module.exports.Deconnect = function(request, response){
 };
 
 module.exports.Connection= function(request, response){
+    //console.log(request.body);
     model.getLoginOk( request.body, function (err, result) {
         if (err) {
             // gestion de l'erreur
             console.log(err);
             return;
         }
+        console.log(request.session.resu);
         if (result.length == 0 || request.body.resu != request.session.resu ) {
         	response.statu = 'Votre login et/ou mot de passe est erroné !';
         	response.img = 'erreur.png';
@@ -33,6 +35,7 @@ module.exports.Connection= function(request, response){
         	response.statu = 'Vous avez bien été connecté !';
         	response.img = 'valid.png';
         	response.res = 'Valide !';
+            request.session.login = request.body.login;
         };
 		response.render('connection', response);
 	});
