@@ -14,7 +14,7 @@ module.exports.Connect = function(request, response){
 
  // ////////////////////////////////////////////// D E C O N N E C T   U T I L I S A T E U R 
 module.exports.Deconnect = function(request, response){
-	 request.session.login ='';
+	 request.session.destroy();
      response.statu = 'Vous avez bien été déconnecté.';
      response.img = 'valid.png';
      response.res = 'Valide !';
