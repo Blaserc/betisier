@@ -14,8 +14,11 @@ module.exports.Connect = function(request, response){
 
  // ////////////////////////////////////////////// D E C O N N E C T   U T I L I S A T E U R 
 module.exports.Deconnect = function(request, response){
-	 
-	 response.redirect('/connect');
+	 request.session.login ='';
+     response.statu = 'Vous avez bien été déconnecté.';
+     response.img = 'valid.png';
+     response.res = 'Valide !';
+	 response.redirect('connection', response);
 };
 
 module.exports.Connection= function(request, response){
@@ -26,7 +29,7 @@ module.exports.Connection= function(request, response){
             console.log(err);
             return;
         }
-        console.log(request.session.resu);
+        //console.log(request.session.resu);
         if (result.length == 0 || request.body.resu != request.session.resu ) {
         	response.statu = 'Votre login et/ou mot de passe est erroné !';
         	response.img = 'erreur.png';
@@ -37,6 +40,7 @@ module.exports.Connection= function(request, response){
         	response.res = 'Valide !';
             request.session.login = request.body.login;
         };
+        //console.log(session.login);
 		response.render('connection', response);
 	});
 };
