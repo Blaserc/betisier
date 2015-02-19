@@ -1,7 +1,7 @@
 <div id="header">
 		<div id="connect">
-			{{#if request.session.login }}
-						Utilisateur : <b> {{request.session.login}}  </b><a href="/deconnect">Déconnexion</a>		</div>	
+			{{#if session.login }}
+						Utilisateur : <b> {{session.login}}  </b><a href="/deconnect">Déconnexion</a>		</div>	
 			{{else}}
 						<a href="/connect">Connexion</a>		</div>	
 			{{/if}}
