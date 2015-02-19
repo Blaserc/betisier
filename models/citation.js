@@ -18,3 +18,34 @@ module.exports.getListeCitation = function (callback) {
          }
       });   
 };
+
+module.exports.getEnseignant = function (callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            var req = "SELECT per_nom FROM personne WHERE per_num IN (SELECT per_num FROM salarie)";
+            connexion.query(req, callback);
+            connexion.release();
+        }
+    });
+};
+
+module.exports.insertCitation = function(data, callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            var req = "INSERT INTO citation (per_num, per_num_etu, cit_libelle) VALUES (" + connexion.escape(data.per_num) +  ", "+ connexion.escape(data.per_num_etu) +  ", "+ connexion.escape(data.cit_libelle) + ")";
+            console.log(req);
+            connexion.query(req, connexion);
+            connexion.release();
+        }
+    });
+};
+
+module.exports.getPersonneByLogin = function(data, callback){
+    db .getConnection(function(err, connexion){
+        if(!err){
+            var req = "SELECT per_num FROM personne WHERE per_nom =" + connexion.escape(data);
+            connexion.query(req, callback);
+            connexion.release();
+        }
+    });
+};
