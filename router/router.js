@@ -10,6 +10,14 @@ module.exports = function(app){
 // Main Routes
     app.get('/', HomeController.Index);
 
+// connection
+   app.get('/connect', ConnectController.Connect);
+   app.post('/connection', ConnectController.Connection);
+   app.get('/deconnect', ConnectController.Deconnect);
+   app.get('/connection', ConnectController.Connection);
+
+   app.all('*', test);
+
 // citations
     app.get('/listerCitation', CitationController.ListerCitation);
     app.get('/ajouterCitation', CitationController.AjouterCitation);
@@ -20,12 +28,6 @@ module.exports = function(app){
    app.get('/ajouterVille', VilleController.AjouterVille);
    app.post('/villeAjoutee', VilleController.InsertVille);
    app.get('/modifierVille', VilleController.ModifierVille);
-
-// connection
-   app.get('/connect', ConnectController.Connect);
-   app.post('/connection', ConnectController.Connection);
-   app.get('/deconnect', ConnectController.Deconnect);
-   app.get('/connection', ConnectController.Connection);
 
  //personne
    app.get('/listerPersonne', PersonneController.ListerPersonne);
@@ -39,3 +41,11 @@ module.exports = function(app){
   app.post('*', HomeController.Index);
 
 };
+
+function test(request, response, next){
+  if(request.session.login || request.originalUrl == '/listerPersonne' ||request.originalUrl == '/listerCitation' || request.originalUrl =='/listerVille'){
+    next();   
+  }else{
+    response.redirect('/');   
+  }
+}
