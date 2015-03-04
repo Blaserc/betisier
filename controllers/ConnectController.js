@@ -57,9 +57,15 @@ module.exports.Connection= function(request, response){
                     if (resulta) {
                         request.session.admin = 1;
                     }
+                    model.getPersonneByLogin(request.session.login, function(err, result){
+                        if(err){
+                            console.log(err);
+                            return;
+                        }
+                        request.session.num = result[0]['per_num'];
+                    });
                 }); 
-            });
-        };
+            };
         console.log(session);
 		response.render('connection', response);
 	});

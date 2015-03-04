@@ -1,35 +1,77 @@
 var model = require('../models/citation.js');
+var pers = require('../models/personne.js');
    
 // ////////////////////////////////////////////// L I S T E R     C I T A T I O N 
    
 module.exports.ListerCitation = 	function(request, response){
-   response.title = 'Liste des citations';
-    model.getListeCitation( function (err, result) {
-        if (err) {
-            // gestion de l'erreur
-            console.log(err);
-            return;
-        }
-   response.listeCitation = result; 
-   response.nbCit = result.length;
-   response.render('listerCitation', response);
-        });
-  } ;   
+  response.title = 'Liste des citations';
+  model.getListeCitation( function (err, result) {
+    if (err) {
+      // gestion de l'erreur
+      console.log(err);
+      return;
+    }
+  response.listeCitation = result; 
+  response.nbCit = result.length;
+  response.render('listerCitation', response);
+  });
+};   
 
 // ////////////////////////////////////////////// A J O U T E R     C I T A T I O N 
    
 module.exports.AjouterCitation = 	function(request, response){
-	   response.title = 'Ajouter des citations';
-   response.render('ajouterCitation', response);
-     
-  } ;   
+  response.title = 'Ajouter des citations';
+  model.getEnseignant(function(err, result){
+    if(err){
+      console.log(err);
+      return;
+    }
+    response.enseignant = result;
+    response.render('ajouterCitation', response);
+  });
+};   
+
+module.exports.InsertCitation = function(request, response){
+  pers.getPersonneByName(request.body.prof, function(err, result){
+    if(err){
+      console.log(err);
+      return;
+    }
+    response.per_num = result[0];
+    // Tester si la personne connectée en session est un étudiant
+    pers.isEtudiant(request.session.num, function(err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      if(result.length == 0){
+        response.prof = 'prof';
+        response.resu = 'Un salarié ne peut pas proposer de citations.';
+        response.render('ajouterCitation', response);
+      }
+      else{
+        response.etu = 'etu';
+        citation = {'per_num':response.per_num['per_num'], 'per_num_etu':request.session.num, 'cit_libelle':request.body.citation};
+        model.insertCitation(citation, function(err, result){
+          if(err){
+            console.log(err);
+            return;
+          }
+          response.resu = 'La citation a été ajoutée.';
+          response.render('ajouterCitation', response);
+        });
+      }
+
+    });
+  });
+};
 
 
 // ////////////////////////////////////////////// R E C H E R C H E R     C I T A T I O N 
    
 module.exports.RechercherCitation = function(request, response){
-   response.title = 'Rechercher des citations';
-   response.render('rechercherCitation', response);
+  response.title = 'Rechercher des citations';
+  response.render('rechercherCitation', response);
  
      		 
   } ; 
