@@ -148,6 +148,26 @@ module.exports.getPersonneByNomPrenomMail = function(data, callback){
    });
 };
 
+module.exports.getPersonneByName = function(data, callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            var req = "SELECT per_num FROM personne WHERE per_nom =" + connexion.escape(data);
+            connexion.query(req, callback);
+            connexion.release();
+        }
+    });
+};
+
+module.exports.getPersonneByLogin = function(data, callback){
+   db.getConnection(function(err, connexion){
+      if(!err){
+         var req = "SELECT per_num FROM personne WHERE per_login =" + connexion.escape(data);
+         connexion.query(req, callback);
+         connexion.release();
+      }
+   });
+};
+
 module.exports.getLoginPris = function(data, callback){
    db.getConnection(function(err, connexion){
       if(!err){

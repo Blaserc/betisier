@@ -39,6 +39,13 @@ module.exports.Connection= function(request, response){
         	response.img = 'valid.png';
         	response.res = 'Valide !';
             request.session.login = request.body.login;
+            model.getPersonneByLogin(request.session.login, function(err, result){
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                request.session.num = result[0]['per_num'];
+            });
         };
         //console.log(session.login);
 		response.render('connection', response);

@@ -1,23 +1,27 @@
 {{> enTete}}
 {{> menu}}		
 <h1> Ajouter une citation</h1>
-{{#if resu}}
+{{#if etu}}
 	<img src="/image/valid.png"/> {{resu}}
 {{else}}
-	<form action="/ajouterCitation" method="POST">
-		<label>Enseignant</label>
-		<select name="prof">
-			{{#each prof}}
-				<option value="{{this.per_nom}}">{{this.per_nom}}</option>
-			{{/each}}
-		</select>
-		<br>
-		<label>Date de la Citation</label>
-		<input name ="date" type="date">
-		<br>
-		<label>Citation</label>
-		<textarea name="citation"></textarea>
-		<br>
-		<input type="submit" value="Ajouter">
-	</form>
+	{{#if prof}}
+		<img src="/image/erreur.png"/> {{resu}}
+	{{else}}
+		<form action="/ajouterCitation" method="POST">
+			<label>Enseignant</label>
+			<select name="prof">
+				{{#each enseignant}}
+					<option value="{{this.per_nom}}">{{this.per_nom}}</option>
+				{{/each}}
+			</select>
+			<br>
+			<label>Date de la Citation</label>
+			<input name ="date" type="date">
+			<br>
+			<label>Citation</label>
+			<textarea name="citation"></textarea>
+			<br>
+			<input type="submit" value="Ajouter">
+		</form>
+	{{/if}}
 {{/if}}
