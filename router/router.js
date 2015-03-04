@@ -16,7 +16,7 @@ module.exports = function(app){
    app.get('/deconnect', ConnectController.Deconnect);
    app.get('/connection', ConnectController.Connection);
 
-   app.all('*', test);
+   app.all('*', testConnecte);
 
 // citations
     app.get('/listerCitation', CitationController.ListerCitation);
@@ -36,14 +36,30 @@ module.exports = function(app){
    app.post('/validerPersonne', PersonneController.ValiderPersonne);
    app.post('/insererPersonne', PersonneController.InsertPersonne);
 
+//vérification si connecté mais pas admin on ne doit pas accéder à ces routes 
+  app.all('*', testAdmin);
+//partie admin 
+  app.get('/validerCitation', CitationController.ValiderCitation);
+  app.get('/supprimerPersonne', PersonneController.SupprimerPersonne);
+  app.get('/supprimerCitation', CitationController.SupprimerCitation);
+  app.get('/supprimerVille', VilleController.SupprimerVille);
+
 // tout le reste
-  app.get('*', HomeController.Index);
-  app.post('*', HomeController.Index);
+  /*app.get('*', HomeController.Index);
+  app.post('*', HomeController.Index);*/
 
 };
 
-function test(request, response, next){
+function testConnecte(request, response, next){
   if(request.session.login || request.originalUrl == '/listerPersonne' ||request.originalUrl == '/listerCitation' || request.originalUrl =='/listerVille'){
+    next();   
+  }else{
+    response.redirect('/');   
+  }
+}
+
+function testAdmin(request, response, next){
+  if(request.session.admin ){
     next();   
   }else{
     response.redirect('/');   

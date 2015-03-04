@@ -75,3 +75,7 @@ module.exports.ModifierVille = function(request, response){
   response.render('modifierVille', response);
 }; 
 
+module.exports.SupprimerVille = function(request, response){
+  response.title = 'Supprimer une ville';
+  response.render('supprimerVille', response);
+}; 

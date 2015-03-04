@@ -34,3 +34,12 @@ module.exports.RechercherCitation = function(request, response){
      		 
   } ; 
 
+module.exports.ValiderCitation = function(request, response){
+  response.title = 'Valider une citation';
+  response.render('validerCitation', response);
+}; 
+
+module.exports.SupprimerCitation = function(request, response){
+  response.title = 'Supprimer une citation';
+  response.render('supprimerCitation', response);
+}; 

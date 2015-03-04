@@ -189,3 +189,7 @@ module.exports.InsertPersonne = function(request, response){
   });
 };
 
+module.exports.SupprimerPersonne = function(request, response){
+  response.title = 'Supprimer une personne';
+  response.render('supprimerPersonne', response);
+}; 

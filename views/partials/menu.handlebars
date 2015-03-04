@@ -2,8 +2,6 @@
 <!--   Contient principalement du HTML  -->
 <!--   M A I S   aussi du code handlebars (tests, affichages)  -->
 
-
-
 <div id="corps">
 	<div id="menu">
 		<div id="menuInt">
@@ -15,14 +13,23 @@
 			{{#if session.login }}
 				<li><a href="/ajouterPersonne">Ajouter</a></li> 
 			{{/if}}
+			{{#if session.admin }}
+				<li><a href="/supprimerPersonne">Supprimer</a></li> 
+			{{/if}}
 		</ul>
 		
 		<p><img class="menuImage" src="/image/citation.gif" alt="Citation"/>Citation</p>
 		<ul>				
 			<li><a href="/listerCitation">Lister</a></li>
 			{{#if session.login }}
-				<li><a href="/rechercherCitation">Rechercher</a></li>
-				<li><a href="/ajouterCitation">Ajouter</a></li>	
+				<li><a href="/rechercherCitation">Rechercher</a></li>	
+			{{/if}}
+			{{#if session.edutiant}}
+				<li><a href="/ajouterCitation">Ajouter</a></li>
+			{{/if}}
+			{{#if session.admin}}
+				<li><a href="/validerCitation">Valider</a></li> 
+				<li><a href="/supprimerCitation">Supprimer</a></li> 
 			{{/if}}
 		</ul>
 		<p><img class="menuImage" src="/image/ville.png"  alt="Ville"/>Ville</p>
@@ -32,9 +39,11 @@
 				<li><a href="/ajouterVille">Ajouter</a></li>
 				<li><a href="/modifierVille">Modifier</a></li>
 			{{/if}}
+			{{#if session.admin}}
+				<li><a href="/supprimerVille">Supprimer</a></li> 
+			{{/if}}
 		</ul>
 	</div>
 </div>
 
 <div id="texte">
-

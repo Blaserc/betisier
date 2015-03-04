@@ -48,6 +48,16 @@ module.exports.isEtudiant = function(data, callback){
    });
 };
 
+module.exports.isAdministrateur = function(data, callback){
+   db.getConnection(function(err, connexion){
+      if(!err){
+         var req = "SELECT per_num FROM personne WHERE per_num = " + data + " AND per_admin = 1";
+         connexion.query(req, callback);
+         connexion.release();
+      }
+   });
+};
+
 module.exports.getInfoPersonne = function(data, callback){
    db.getConnection(function(err, connexion){
       if(!err){
