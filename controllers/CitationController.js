@@ -92,11 +92,6 @@ module.exports.VerifierCitation = function(request, response){
   });
 };
 
-module.exports.InsertCitation = function(request, response){
-  
-};
-
-
 // ////////////////////////////////////////////// R E C H E R C H E R     C I T A T I O N 
    
 module.exports.RechercherCitation = function(request, response){
@@ -106,3 +101,12 @@ module.exports.RechercherCitation = function(request, response){
      		 
   } ; 
 
+module.exports.ValiderCitation = function(request, response){
+  response.title = 'Valider une citation';
+  response.render('validerCitation', response);
+}; 
+
+module.exports.SupprimerCitation = function(request, response){
+  response.title = 'Supprimer une citation';
+  response.render('supprimerCitation', response);
+}; 
