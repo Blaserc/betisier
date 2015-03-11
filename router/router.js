@@ -22,7 +22,8 @@ module.exports = function(app){
     app.get('/listerCitation', CitationController.ListerCitation);
     app.get('/ajouterCitation', CitationController.AjouterCitation);
     app.get('/rechercherCitation', CitationController.RechercherCitation);
-    app.post('/ajouterCitation', CitationController.InsertCitation);
+    app.get('/ajoutCitation', CitationController.InsertCitation);
+    app.post('/verifierCitation', CitationController.VerifierCitation);
 
  // villes
    app.get('/listerVille', VilleController.ListerVille);

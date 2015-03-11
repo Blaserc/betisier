@@ -32,7 +32,7 @@ module.exports.getEnseignant = function (callback){
 module.exports.insertCitation = function(data, callback){
     db.getConnection(function(err, connexion){
         if(!err){
-            var req = "INSERT INTO citation (per_num, per_num_etu, cit_libelle) VALUES (" + connexion.escape(data.per_num) +  ", "+ connexion.escape(data.per_num_etu) +  ", "+ connexion.escape(data.cit_libelle) + ")";
+            var req = "INSERT INTO citation (per_num, per_num_etu, cit_libelle, cit_date) VALUES (" + connexion.escape(data.per_num) +  ", "+ connexion.escape(data.per_num_etu) +  ", "+ connexion.escape(data.cit_libelle) + ", " + connexion.escape(data.cit_date) + ")";
             connexion.query(req, callback);
             connexion.release();
         }

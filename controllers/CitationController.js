@@ -1,5 +1,6 @@
 var model = require('../models/citation.js');
 var pers = require('../models/personne.js');
+var mot = require('../models/mot.js');
    
 // ////////////////////////////////////////////// L I S T E R     C I T A T I O N 
    
@@ -31,39 +32,68 @@ module.exports.AjouterCitation = 	function(request, response){
   });
 };   
 
-module.exports.InsertCitation = function(request, response){
-  pers.getPersonneByName(request.body.prof, function(err, result){
+module.exports.VerifierCitation = function(request, response){
+  mot.search(request.body.citation, function(err, result){
     if(err){
       console.log(err);
       return;
     }
-    response.per_num = result[0];
-    // Tester si la personne connectée en session est un étudiant
-    pers.isEtudiant(request.session.num, function(err, result){
+    if(result.length == 0){
+      // Inserer la citation
+      pers.getPersonneByName(request.body.prof, function(err, result){
       if(err){
         console.log(err);
         return;
       }
-      if(result.length == 0){
-        response.prof = 'prof';
-        response.resu = 'Un salarié ne peut pas proposer de citations.';
-        response.render('ajouterCitation', response);
-      }
-      else{
-        response.etu = 'etu';
-        citation = {'per_num':response.per_num['per_num'], 'per_num_etu':request.session.num, 'cit_libelle':request.body.citation};
-        model.insertCitation(citation, function(err, result){
-          if(err){
-            console.log(err);
-            return;
-          }
-          response.resu = 'La citation a été ajoutée.';
+      response.per_num = result[0];
+      // Tester si la personne connectée en session est un étudiant
+      pers.isEtudiant(request.session.num, function(err, result){
+        if(err){
+          console.log(err);
+          return;
+        }
+        if(result.length == 0){
+          response.prof = 'prof';
+          response.resu = 'Un salarié ne peut pas proposer de citations.';
           response.render('ajouterCitation', response);
-        });
-      }
-
+        }
+        else{
+          response.etu = 'etu';
+          citation = {'per_num':response.per_num['per_num'], 'per_num_etu':request.session.num, 'cit_libelle':request.body.citation, 'cit_date':request.body.date};
+          model.insertCitation(citation, function(err, result){
+            if(err){
+              console.log(err);
+              return;
+            }
+            response.resu = 'La citation a été ajoutée.';
+            response.render('ajouterCitation', response);
+          });
+        }
     });
+    });
+    }
+    else{
+      var newCit = request.body.citation.replace(result[0]['mot_interdit'], "---")
+      for(i=1; i<result.length; i++){
+        newCit = newCit.replace(result[i]['mot_interdit'], "---");
+      }
+      response.citation = newCit;
+      model.getEnseignant(function(err, result){
+        if(err){
+          console.log(err);
+          return;
+        }
+        response.enseignant = result;
+        var nonValide = {'prof':request.body.prof, 'date':request.body.date};
+        response.nonValide = nonValide;
+        response.render('ajouterCitation', response);
+      });
+    }
   });
+};
+
+module.exports.InsertCitation = function(request, response){
+  
 };
 
 
