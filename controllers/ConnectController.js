@@ -39,13 +39,14 @@ module.exports.Connection= function(request, response){
         	response.img = 'valid.png';
         	response.res = 'Valide !';
             request.session.login = request.body.login;
+            request.session.num = result[0]['per_num'];
             model.isEtudiant (result[0]['per_num'], function (err, resulte) {
                 if (err) {
                     // gestion de l'erreur
                     console.log(err);
                     return;
                 }
-                if (resulte) {
+                if (resulte.length != 0) {
                     request.session.etudiant = 1;
                 }
                 model.isAdministrateur (result[0]['per_num'], function (err, resulta) {
@@ -54,19 +55,12 @@ module.exports.Connection= function(request, response){
                         console.log(err);
                         return;
                     }
-                    if (resulta) {
+                    if (resulta.length != 0) {
                         request.session.admin = 1;
                     }
-                    model.getPersonneByLogin(request.session.login, function(err, result){
-                        if(err){
-                            console.log(err);
-                            return;
-                        }
-                        request.session.num = result[0]['per_num'];
-                    });
                 }); 
-            };
-        console.log(session);
+            });
+        }
 		response.render('connection', response);
 	});
 };

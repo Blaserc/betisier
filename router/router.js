@@ -23,12 +23,15 @@ module.exports = function(app){
     app.get('/ajouterCitation', CitationController.AjouterCitation);
     app.get('/rechercherCitation', CitationController.RechercherCitation);
     app.post('/ajouterCitation', CitationController.InsertCitation);
+    app.get('/validerCitation', CitationController.ValiderCitation);
+    app.get('/supprimerCitation', CitationController.SupprimerCitation);
 
  // villes
    app.get('/listerVille', VilleController.ListerVille);
    app.get('/ajouterVille', VilleController.AjouterVille);
    app.post('/villeAjoutee', VilleController.InsertVille);
    app.get('/modifierVille', VilleController.ModifierVille);
+   app.get('/supprimerVille', VilleController.SupprimerVille);
 
  //personne
    app.get('/listerPersonne', PersonneController.ListerPersonne);
@@ -36,14 +39,7 @@ module.exports = function(app){
    app.get('/ajouterPersonne', PersonneController.AjouterPersonne);
    app.post('/validerPersonne', PersonneController.ValiderPersonne);
    app.post('/insererPersonne', PersonneController.InsertPersonne);
-
-//vérification si connecté mais pas admin on ne doit pas accéder à ces routes 
-  app.all('*', testAdmin);
-//partie admin 
-  app.get('/validerCitation', CitationController.ValiderCitation);
-  app.get('/supprimerPersonne', PersonneController.SupprimerPersonne);
-  app.get('/supprimerCitation', CitationController.SupprimerCitation);
-  app.get('/supprimerVille', VilleController.SupprimerVille);
+   app.get('/supprimerPersonne', PersonneController.SupprimerPersonne);
 
 // tout le reste
   /*app.get('*', HomeController.Index);
@@ -52,16 +48,17 @@ module.exports = function(app){
 };
 
 function testConnecte(request, response, next){
-  if(request.session.login || request.originalUrl == '/listerPersonne' ||request.originalUrl == '/listerCitation' || request.originalUrl =='/listerVille'){
-    next();   
-  }else{
-    response.redirect('/');   
-  }
-}
-
-function testAdmin(request, response, next){
-  if(request.session.admin ){
-    next();   
+  if(request.session.login || request.originalUrl == '/listerPersonne' || request.originalUrl == '/listerCitation' || request.originalUrl =='/listerVille'){
+    if(request.originalUrl == '/validerCitation' || request.originalUrl == '/supprimerPersonne' || request.originalUrl == '/supprimerCitation' || request.originalUrl == '/supprimerVille')
+    {
+      if (request.session.admin == 1) {
+        next();
+      }else{
+        response.redirect('/'); 
+      };
+    }else{
+      next();
+    }  
   }else{
     response.redirect('/');   
   }
