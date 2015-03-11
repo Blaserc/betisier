@@ -23,7 +23,6 @@ module.exports = function(app){
     app.get('/ajouterCitation', CitationController.AjouterCitation);
     app.get('/rechercherCitation', CitationController.RechercherCitation);
     app.post('/verifierCitation', CitationController.VerifierCitation);
-    app.post('/ajouterCitation', CitationController.InsertCitation);
     app.get('/validerCitation', CitationController.ValiderCitation);
     app.get('/supprimerCitation', CitationController.SupprimerCitation);
 
