@@ -8,10 +8,10 @@ module.exports.getListeCitation = function (callback) {
         if(!err){
         	  // s'il n'y a pas d'erreur de connexion
         	  // execution de la requête SQL        	  
-            connexion.query("SELECT per_prenom, per_nom, cit_libelle, date_format(cit_date, '%d/%m/%Y') as cit_date, avg(vot_valeur) as moyenne " +
+            connexion.query("SELECT c.cit_num, per_prenom, per_nom, cit_libelle, date_format(cit_date, '%d/%m/%Y') as cit_date, avg(vot_valeur) as moyenne " +
              'FROM citation c join personne p on c.per_num=p.per_num join vote v on c.cit_num = v.cit_num ' +
              'WHERE cit_valide = 1 AND cit_date_valide IS NOT NULL ' +
-             'GROUP BY per_nom, per_prenom, cit_libelle, cit_date', callback);
+             'GROUP BY per_nom, per_prenom, cit_libelle, cit_date, c.cit_num', callback);
             
             // la connexion retourne dans le pool
             connexion.release();
@@ -33,6 +33,18 @@ module.exports.insertCitation = function(data, callback){
     db.getConnection(function(err, connexion){
         if(!err){
             var req = "INSERT INTO citation (per_num, per_num_etu, cit_libelle, cit_date) VALUES (" + connexion.escape(data.per_num) +  ", "+ connexion.escape(data.per_num_etu) +  ", "+ connexion.escape(data.cit_libelle) + ", " + connexion.escape(data.cit_date) + ")";
+            connexion.query(req, callback);
+            connexion.release();
+        }
+    });
+};
+
+module.exports.suprCitation = function(data, callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            var req = "DELETE * FROM vote WHERE cit_num = " + connexion.escape(data);
+            connexion.query(req, callback);
+            var req = "DELETE * FROM citation WHERE cit_num = " + connexion.escape(data);
             connexion.query(req, callback);
             connexion.release();
         }

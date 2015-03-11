@@ -1,3 +1,30 @@
 {{> enTete}}
 {{> menu}}		
 <h1> {{title}}</h1>
+
+{{#if res}}
+	<p><img src="/image/{{img}}" alt="{{res}}" > {{statu}}</p>
+{{else}}
+<p>Il y a actuellement {{nbCit}} citations enregistrées</p>
+ <table>
+     <tr>
+       <th>Nom de l'enseignant</th>
+       <th>Libelle</th>
+       <th>Date</th>
+       <th>Moyenne des notes</th>
+       <th></th>
+     </tr>                               
+ {{#each listeCitation}}
+ 	<form action="/suppressionCitation" method="POST">
+    	<tr>
+    		
+    			<td>{{this.per_prenom}} {{this.per_nom}}</td>
+    			<td>{{this.cit_libelle}}</td>
+    			<td>{{this.cit_date}}</td>
+    			<td>{{this.moyenne}}</td>
+    			<td><input value='submit' src="image/erreur.png" type='image'></td>
+    	</tr>
+    </form>
+ {{/each}}	
+{{/if}}
+ </table>
