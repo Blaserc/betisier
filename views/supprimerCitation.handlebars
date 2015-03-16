@@ -4,6 +4,14 @@
 
 {{#if res}}
 	<p><img src="/image/{{img}}" alt="{{res}}" > {{statu}}</p>
+  <p>Redirection automatique dans 2 secondes. </p>
+  <script type="text/javascript">   
+  function Redirect() 
+  {  
+    window.location="/supprimerCitation"; 
+  } 
+  setTimeout('Redirect()', 2000);   
+  </script>
 {{else}}
 <p>Il y a actuellement {{nbCit}} citations enregistrées</p>
  <table>
@@ -17,7 +25,7 @@
  {{#each listeCitation}}
  	<form action="/suppressionCitation" method="POST">
     	<tr>
-    		
+    		  <input name='cit' value='{{this.cit_num}}' type='text' hidden></input>
     			<td>{{this.per_prenom}} {{this.per_nom}}</td>
     			<td>{{this.cit_libelle}}</td>
     			<td>{{this.cit_date}}</td>

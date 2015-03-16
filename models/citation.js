@@ -42,9 +42,25 @@ module.exports.insertCitation = function(data, callback){
 module.exports.suprCitation = function(data, callback){
     db.getConnection(function(err, connexion){
         if(!err){
-            var req = "DELETE * FROM vote WHERE cit_num = " + connexion.escape(data);
-            connexion.query(req, callback);
-            var req = "DELETE * FROM citation WHERE cit_num = " + connexion.escape(data);
+            suprVotes(data, function(err,result){
+                if(err){
+                    return;
+                }else{
+                    console.log("début");
+                    var req = "DELETE FROM citation WHERE cit_num = " + connexion.escape(data);
+                    connexion.query(req, callback);
+                    connexion.release();
+                }
+            });
+            
+        }
+    });
+};
+
+function suprVotes(data, callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            var req = "DELETE FROM vote WHERE cit_num = " + connexion.escape(data);
             connexion.query(req, callback);
             connexion.release();
         }
