@@ -191,5 +191,29 @@ module.exports.InsertPersonne = function(request, response){
 
 module.exports.SupprimerPersonne = function(request, response){
   response.title = 'Supprimer une personne';
-  response.render('supprimerPersonne', response);
+  if(request.body.pers){
+    model.suprPers(request.body.pers, function(err, result){
+      if(err){
+        response.statu = 'La personne n\'a pas pu être supprimée !';
+        response.img = 'erreur.png';
+        response.res = 'Erreur';
+      }else{
+        response.img = 'valid.png';
+        response.res = 'Valide !';
+        response.statu = 'La personne a bien été supprimée !';
+      }
+      response.render('supprimerPersonne', response);
+    });
+  }else{
+     model.getListePersonneSuppr( function (err, result) {
+      if (err) {
+        // gestion de l'erreur
+        console.log(err);
+        return;
+      }
+      response.listePersonne = result; 
+      response.nbPersonne = result.length;
+      response.render('supprimerPersonne', response);
+    });
+  }
 }; 

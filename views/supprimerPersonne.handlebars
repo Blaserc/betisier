@@ -1,3 +1,36 @@
 {{> enTete}}
 {{> menu}}		
 <h1> {{title}}</h1>
+
+{{#if res}}
+	<p><img src="/image/{{img}}" alt="{{res}}" > {{statu}}</p>
+  <p>Redirection automatique dans 2 secondes. </p>
+  <script type="text/javascript">   
+  function Redirect() 
+  {  
+    window.location="/supprimerPersonne"; 
+  } 
+  setTimeout('Redirect()', 2000);   
+  </script>
+{{else}}
+<p>Il y a actuellement {{nbPersonne}} personnes enregistrées</p>
+ <table>
+     <tr>
+       <th>Numéro</th>
+       <th>Nom</th>
+       <th>Prenom</th>
+       <th></th>
+     </tr>                               
+ {{#each listePersonne}}
+ 	<form action="/suppressionPersonne" method="POST">
+    	<tr>
+    		  <input name='pers' value='{{this.per_num}}' type='text' hidden></input>
+    			<td>{{this.per_num}} </td>
+    			<td>{{this.per_nom}}</td>
+    			<td>{{this.per_prenom}} </td>
+    			<td><input value='submit' src="image/erreur.png" type='image'></td>
+    	</tr>
+    </form>
+ {{/each}}	
+{{/if}}
+ </table>

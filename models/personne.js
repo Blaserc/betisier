@@ -48,6 +48,16 @@ module.exports.isEtudiant = function(data, callback){
    });
 };
 
+function isEtudiant(data, callback){
+   db.getConnection(function(err, connexion){
+      if(!err){
+         var req = "SELECT per_num FROM etudiant WHERE per_num = " + data;
+         connexion.query(req, callback);
+         connexion.release();
+      }
+   });
+};
+
 module.exports.isAdministrateur = function(data, callback){
    db.getConnection(function(err, connexion){
       if(!err){
@@ -221,4 +231,66 @@ module.exports.insertSalarie = function(data, callback){
    });
 };
 
+module.exports.getListePersonneSuppr = function (callback) {
+   db.getConnection(function(err, connexion){
+   if(!err){
+      var req = 'SELECT per_num, per_nom, per_prenom FROM personne WHERE per_num NOT IN (SELECT per_num FROM citation)'+
+      ' AND per_num NOT IN (SELECT per_num FROM vote)';
+      connexion.query(req, callback);
+      connexion.release();
+   }
+   });
+};
 
+module.exports.suprPers = function(data, callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            //tester si étudiant ou pas
+            isEtudiant(data, function(err,result){
+               if (result.length == 0) {
+                  suprSal(data, function(err,result){
+                     if(err){
+                        console.log(err);
+                        return;
+                     }else{
+                        var req = "DELETE FROM personne WHERE per_num = " + connexion.escape(data);
+                        connexion.query(req, callback);
+                        connexion.release();
+                     }
+                  });
+               }else{
+                   suprEtu(data, function(err,result){
+                      if(err){
+                        console.log(err);
+                        return;
+                      }else{
+                        var req = "DELETE FROM personne WHERE per_num = " + connexion.escape(data);
+                        connexion.query(req, callback);
+                        connexion.release();
+                      }
+                  });
+               }
+            });            
+        }
+    });
+};
+
+function suprEtu(data, callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            var req = "DELETE FROM etudiant WHERE per_num = " + connexion.escape(data);
+            connexion.query(req, callback);
+            connexion.release();
+        }
+    });
+};
+
+function suprSal(data, callback){
+    db.getConnection(function(err, connexion){
+        if(!err){
+            var req = "DELETE FROM salarie WHERE per_num = " + connexion.escape(data);
+            connexion.query(req, callback);
+            connexion.release();
+        }
+    });
+};

@@ -66,7 +66,6 @@ module.exports.suprCitation = function(data, callback){
                 if(err){
                     return;
                 }else{
-                    console.log("début");
                     var req = "DELETE FROM citation WHERE cit_num = " + connexion.escape(data);
                     connexion.query(req, callback);
                     connexion.release();
