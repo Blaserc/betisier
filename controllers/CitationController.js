@@ -4,7 +4,7 @@ var mot = require('../models/mot.js');
    
 // ////////////////////////////////////////////// L I S T E R     C I T A T I O N 
    
-module.exports.ListerCitation = 	function(request, response){
+module.exports.ListerCitation = function(request, response){
   response.title = 'Liste des citations';
   model.getListeCitation( function (err, result) {
     if (err) {
@@ -12,11 +12,49 @@ module.exports.ListerCitation = 	function(request, response){
       console.log(err);
       return;
     }
-  response.listeCitation = result; 
-  response.nbCit = result.length;
-  response.render('listerCitation', response);
+    response.listeCitation = result; 
+    response.nbCit = result.length;
+    if(request.session.num){
+      model.getCitVotees(request.session.num, function (err, result){
+        if(err){
+          console.log(err);
+          return;
+        }
+        if(result.length != 0){
+          response.dejaNote = 'truc';
+        }
+        response.render('listerCitation', response);
+      });
+    }
   });
 };   
+
+//  ///////////////////////////////////////////// N O T E R     C I T A T I O N
+
+module.exports.NoterCitation = function(request, response){
+  response.title = 'Noter une citation';
+  if(request.body.note){
+    console.log(request.body.cit_no);
+    // Note donnée
+    // Ne pas noter 2 fois la même citation
+    // Render du note prise en compte
+    console.log(request.body.note);
+    note = {'cit_no':request.body.cit_no, 'per_num':request.session.num, 'vote':request.body.note};
+    model.noterCitation(note, function (err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      response.redirect('/listerCitation');
+    });
+  }
+  else{
+    //note non donnée
+    response.cit_no = request.body.cit_num;
+    response.render('noterCitation', response);
+    
+  }
+};
 
 // ////////////////////////////////////////////// A J O U T E R     C I T A T I O N 
    

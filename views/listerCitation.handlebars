@@ -4,13 +4,32 @@
 <p>Il y a actuellement {{nbCit}} citations enregistrées</p>
 
 <table>
-     <tr>
-       <th>Nom de l'enseignant</th>
-       <th>Libelle</th>
-       <th>Date</th>
-       <th>Moyenne des notes</th>
-     </tr>                               
- {{#each listeCitation}}
-    <tr><td>{{this.per_prenom}} {{this.per_nom}}</td><td>{{this.cit_libelle}}</td><td>{{this.cit_date}}</td><td>{{this.moyenne}}</td></tr>
- {{/each}}
+    <tr>
+    	<th>Nom de l'enseignant</th>
+    	<th>Libelle</th>
+    	<th>Date</th>
+    	<th>Moyenne des notes</th>
+    	{{#if session.etudiant}}
+    		<th>Noter</th>
+    	{{/if}}
+    </tr>                               
+	{{#each listeCitation}}
+    	<tr>
+    		<td>{{this.per_prenom}} {{this.per_nom}}</td>
+    		<td>{{this.cit_libelle}}</td>
+    		<td>{{this.cit_date}}</td>
+    		<td>{{this.moyenne}}</td>
+    		{{#if ../session.etudiant}}
+                {{#if ../../dejaNote}}
+                    <td><img src="image/erreur.png"></td>
+                {{else}}
+        			<td><form action="/noterCitation" method="POST">
+                        <input type="text" value="{{this.cit_num}}" name="cit_num" hidden>
+                        <input type="image" value="submit" src="image/modifier.png">
+                        </form>
+                    </td>
+                {{/if}}
+    		{{/if}}
+    	</tr>
+ 	{{/each}}
  </table>
