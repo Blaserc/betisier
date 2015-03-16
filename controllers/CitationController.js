@@ -135,7 +135,6 @@ module.exports.VerifierCitation = function(request, response){
 module.exports.RechercherCitation = function(request, response){
   response.title = 'Rechercher des citations';
   response.render('rechercherCitation', response);
- 
      		 
   } ; 
 
@@ -146,5 +145,29 @@ module.exports.ValiderCitation = function(request, response){
 
 module.exports.SupprimerCitation = function(request, response){
   response.title = 'Supprimer une citation';
-  response.render('supprimerCitation', response);
+  if(request.body.cit){
+    model.suprCitation(request.body.cit, function(err, result){
+      if(err){
+        response.statu = 'La citation n\'a pas pu être supprimée !';
+        response.img = 'erreur.png';
+        response.res = 'Erreur';
+      }else{
+        response.img = 'valid.png';
+        response.res = 'Valide !';
+        response.statu = 'La citation a bien été supprimée !';
+      }
+      response.render('supprimerCitation', response);
+    });
+  }else{
+     model.getListeCitation( function (err, result) {
+      if (err) {
+        // gestion de l'erreur
+        console.log(err);
+        return;
+      }
+      response.listeCitation = result; 
+      response.nbCit = result.length;
+      response.render('supprimerCitation', response);
+    });
+  }
 }; 
