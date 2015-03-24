@@ -134,9 +134,47 @@ module.exports.VerifierCitation = function(request, response){
    
 module.exports.RechercherCitation = function(request, response){
   response.title = 'Rechercher des citations';
-  response.render('rechercherCitation', response);
-     		 
-  } ; 
+  model.getEnseignant(function(err, result){
+    if(err){
+      console.log(err);
+      return;
+    }
+    response.enseignant = result;
+    // On ne rentre même pas ici.
+    /*if(result.length != 0){
+      console.log('patate');
+      model.getDates(function(err, result){
+      console.log('poney');
+      if(err){
+        console.log(err);
+        return;
+        }
+        response.date = result;
+      });
+    }*/
+    response.render('rechercherCitation', response);
+  });
+}; 
+
+module.exports.Recherche = function(request, response){
+  response.title = 'Resultats de la recherche';
+  if(request.body.prof){
+    model.getCitByProf(request.body.prof, function(err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      console.log(result);
+      if(result.length == 0){
+        var res = "Aucun résultat.";
+      }
+      else{
+        response.citation = result;
+      }
+      response.render('rechercheResultats', response);
+    });
+  }
+};
 
 module.exports.ValiderCitation = function(request, response){
   response.title = 'Valider une citation';
