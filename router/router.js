@@ -43,6 +43,7 @@ module.exports = function(app){
    app.post('/validerPersonne', PersonneController.ValiderPersonne);
    app.post('/insererPersonne', PersonneController.InsertPersonne);
    app.get('/supprimerPersonne', PersonneController.SupprimerPersonne);
+   app.post('/suppressionPersonne', PersonneController.SupprimerPersonne);
 
 // tout le reste
   /*app.get('*', HomeController.Index);
