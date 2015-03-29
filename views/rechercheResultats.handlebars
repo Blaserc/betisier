@@ -1,7 +1,9 @@
 {{> enTete}}
 {{> menu}}		
 <h1> {{title}}</h1>
-
+{{#if res}}
+<div> {{> res}}
+{{else}}
 <table>
     <tr>
     	<th>Nom de l'enseignant</th>
@@ -11,7 +13,7 @@
     	{{#if session.etudiant}}
     		<th>Noter</th>
     	{{/if}}
-    </tr>                               
+    </tr>
 	{{#each citation}}
     	<tr>
     		<td>{{this.per_prenom}} {{this.per_nom}}</td>
@@ -32,8 +34,9 @@
     	</tr>
  	{{/each}}
  </table>
+ {{/if}}
 
-freeCAD : modeleur 3D
+<!-- freeCAD : modeleur 3D
 Aussi Blender mais plus complexe à prendre en main.
 K-3D : très simple à prendre en main mais limité, pas d'objets très complexes
-Wings 3D
+Wings 3D -->

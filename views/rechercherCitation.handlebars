@@ -5,6 +5,7 @@
 <form method="POST" action="/recherche">
 	<label>Enseignant</label>
 	<select name="prof">
+		<option value="-1">Tous</option>
 		{{#each enseignant}}
 			<option value="{{this.per_nom}}">{{this.per_nom}}</option>
 		{{/each}}
@@ -12,15 +13,17 @@
 	<br>
 	<label>Date</label>
 	<select name="date">
+		<option value="-1">Toutes</option>
 		{{#each date}}
-			<option value="{{this.cit_date}}">{{this.cit_date}}</option>
+			<option value="{{this.cit_date}}" type='date'>{{this.cit_date}}</option>
 		{{/each}}
 	</select>
 	<br>
 	<label>Note</label>
 	<select name="note">
+		<option value="-1">Toutes</option>
 		{{#each note}}
-			<option value="{{this.cit_date}}">{{this.cit_date}}</option>
+			<option value="{{this.vot_valeur}}">{{this.vot_valeur}}</option>
 		{{/each}}
 	</select>
 	<br>

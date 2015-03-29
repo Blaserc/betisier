@@ -23,9 +23,9 @@ module.exports.ListerCitation = function(request, response){
         if(result.length != 0){
           response.dejaNote = 'truc';
         }
-        response.render('listerCitation', response);
       });
     }
+    response.render('listerCitation', response);
   });
 };   
 
@@ -134,32 +134,34 @@ module.exports.VerifierCitation = function(request, response){
    
 module.exports.RechercherCitation = function(request, response){
   response.title = 'Rechercher des citations';
-  model.getEnseignant(function(err, result){
+  model.getEnseignantCitVal(function(err, result){
     if(err){
       console.log(err);
       return;
     }
     response.enseignant = result;
-    // On ne rentre même pas ici.
-    /*if(result.length != 0){
-      console.log('patate');
-      model.getDates(function(err, result){
-      console.log('poney');
+    model.getDates(function(err, result){
       if(err){
         console.log(err);
         return;
+      }
+      response.date = result;
+      model.getNotes(function(err, result){
+        if(err){
+          console.log(err);
+          return;
         }
-        response.date = result;
+        response.note = result;
+        response.render('rechercherCitation', response);
       });
-    }*/
-    response.render('rechercherCitation', response);
+    });
   });
 }; 
 
 module.exports.Recherche = function(request, response){
   response.title = 'Resultats de la recherche';
   if(request.body.prof){
-    model.getCitByProf(request.body.prof, function(err, result){
+    model.getResu(request.body.prof, request.body.date, request.body.note, function(err, result){
       if(err){
         console.log(err);
         return;
