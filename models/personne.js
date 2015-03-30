@@ -188,6 +188,16 @@ module.exports.getPersonneByLogin = function(data, callback){
    });
 };
 
+module.exports.getPersonneById = function(num, callback){
+   db.getConnection(function(err, connexion){
+      if(!err){
+         var req = "SELECT * FROM personne WHERE per_num = " + connexion.escape(num);
+         connexion.query(req, callback);
+         connexion.release();
+      }
+   });
+};
+
 module.exports.getLoginPris = function(data, callback){
    db.getConnection(function(err, connexion){
       if(!err){
@@ -230,6 +240,25 @@ module.exports.insertSalarie = function(data, callback){
       }
    });
 };
+
+module.exports.modifierPersonne = function(pers, callback){
+   db.getConnection(function(err, connexion){
+      if(!err){
+         var req = "UPDATE personne SET per_nom = " + connexion.escape(pers.nom) +
+         ", per_prenom = " + connexion.escape(pers.prenom) +
+         ", per_tel = " + connexion.escape(pers.tel) +
+         ", per_mail = " + connexion.escape(pers.mail) +
+         ", per_login = " + connexion.escape(pers.prenom);
+         if(pers.pwd){
+            req += ", per_pwd = " + connexion.escape(pers.pwd);
+         }
+         req += " WHERE per_num = " + pers.num;
+
+         connexion.query(req, callback);
+         connexion.release();
+      }
+   })
+}
 
 module.exports.getListePersonneSuppr = function (callback) {
    db.getConnection(function(err, connexion){

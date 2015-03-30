@@ -47,6 +47,9 @@ module.exports = function(app){
    app.post('/insererPersonne', PersonneController.InsertPersonne);
    app.get('/supprimerPersonne', PersonneController.SupprimerPersonne);
    app.post('/suppressionPersonne', PersonneController.SupprimerPersonne);
+   app.get('/modifierPersonne', PersonneController.ModifierPersonne);
+   app.post('/modifierPersonne', PersonneController.ModifierPersonne);
+   app.post('/personneModifiee', PersonneController.PersonneModifiee);
 
 // tout le reste
   /*app.get('*', HomeController.Index);
@@ -56,7 +59,7 @@ module.exports = function(app){
 
 function testConnecte(request, response, next){
   if(request.session.login || request.originalUrl == '/listerPersonne' || request.originalUrl == '/listerCitation' || request.originalUrl =='/listerVille'){
-    (request.originalUrl == '/validerCitation' || request.originalUrl == '/supprimerPersonne' || request.originalUrl == '/supprimerCitation' || request.originalUrl == '/supprimerVille')
+    if(request.originalUrl == '/validerCitation' || request.originalUrl == '/supprimerPersonne' || request.originalUrl == '/supprimerCitation' || request.originalUrl == '/supprimerVille')
     {
       if (request.session.admin == 1) {
         next();

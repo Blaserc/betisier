@@ -2,6 +2,7 @@ var model = require('../models/personne.js');
 
   // ////////////////////////////////////////////// C O N N E C T   U T I L I S A T E U R 
 module.exports.Connect = function(request, response){
+    // Gestion du captcha
 	nb1 = aleatoire(1,9);
 	nb2 = aleatoire(1,9);
 	response.img1 = nb1+'.jpg';
@@ -14,6 +15,7 @@ module.exports.Connect = function(request, response){
 
  // ////////////////////////////////////////////// D E C O N N E C T   U T I L I S A T E U R 
 module.exports.Deconnect = function(request, response){
+    // On supprime toutes les données utilisateurs en session et on informe de la déconnection.
 	 request.session.destroy();
      response.statu = 'Vous avez bien été déconnecté.';
      response.img = 'valid.png';
@@ -23,6 +25,7 @@ module.exports.Deconnect = function(request, response){
 
 module.exports.Connection= function(request, response){
     //console.log(request.body);
+    // On teste si l'utilisateur est bien dans la base
     model.getLoginOk( request.body, function (err, result) {
         if (err) {
             // gestion de l'erreur
@@ -30,11 +33,13 @@ module.exports.Connection= function(request, response){
             return;
         }
         //console.log(request.session.resu);
+        // Utilisateur non trouvé
         if (result.length == 0 || request.body.resu != request.session.resu ) {
         	response.statu = 'Votre login et/ou mot de passe est erroné !';
         	response.img = 'erreur.png';
         	response.res = 'Erreur';
         } else{
+            // Utilisateur trouvé, enregistrement de ses données en session
         	response.statu = 'Vous avez bien été connecté !';
         	response.img = 'valid.png';
         	response.res = 'Valide !';

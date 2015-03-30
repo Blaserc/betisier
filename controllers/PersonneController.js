@@ -6,12 +6,14 @@ var model = require('../models/personne.js');
    
 module.exports.ListerPersonne = function(request, response){
     response.title = 'Liste des personnes';
+    // Récupérer la iste des personnes
     model.getListePersonne( function (err, result) {
         if (err) {
             // gestion de l'erreur
             console.log(err);
             return;
         }
+    // Renvoyer les résultats dans la vue
     response.listePersonne = result; 
     response.nbPersonne = result.length;
     response.render('listerPersonne', response);  
@@ -19,6 +21,7 @@ module.exports.ListerPersonne = function(request, response){
 };   
 
 module.exports.DetailPersonne = function(request, response){
+  // Récupérer l'idetifiant et chercher si c'est un étudiant ou un salarié
   var id = request.params.nump;
   model.isEtudiant(id, function (err, result) {
         if (err) {
@@ -63,7 +66,11 @@ module.exports.AjouterPersonne = function(request, response){
 };
 
 module.exports.ValiderPersonne = function(request, response){
+  // On garde en session les informations de la personne à ajouter
   request.session.personne = {'nom':request.body.nom, 'prenom':request.body.prenom, 'tel':request.body.telephone, 'mail':request.body.email, 'login':request.body.login, 'password':request.body.password, 'categorie':request.body.categorie};
+  // Si c'est un étudiant,
+  // on recherche les divisions et départements auxquels il peut appartenir.
+  // On envoie les résultats à la vue pour que l'utilisateur termine la saisie
   if(request.body.categorie == 'etudiant'){
     model.getDivision(function(err, result){
       if(err){
@@ -78,6 +85,9 @@ module.exports.ValiderPersonne = function(request, response){
       });
     });
   }
+  // Si c'est un prof,
+  // on recherche les fonctions qu'ils peut faire
+  // On envoie les résultats à la vue pour que l'utilisateur termine la saisie
   else{
     model.getFonction(function(err, result){
       if(err){
@@ -105,7 +115,7 @@ module.exports.InsertPersonne = function(request, response){
     }
     else{
       // Le login est libre
-      // On teste si la personne existe (mail, nom, prenom)
+      // On teste si la personne n'existe déjà (mail, nom, prenom)
       pers = {'nom':request.session.personne['nom'], 'prenom':request.session.personne['prenom'], 'mail':request.session.personne['mail']};
       model.getPersonneByNomPrenomMail(pers, function(err, result){
         if(err){
@@ -143,7 +153,6 @@ module.exports.InsertPersonne = function(request, response){
                   }
                   response.div_num = result[0]['div_num'];
                   // On récupère le numéro de son département
-                  //Attention, villes non gérées
                   model.getDepNumByDepNom(request.body.dep, function(err, result){
                     if(err){
                       console.log(err);
@@ -162,13 +171,16 @@ module.exports.InsertPersonne = function(request, response){
                   });
                 });
               }
+              // Si c'est un salarié
               else{
+                // On récuère le numéro de sa fonction
                 model.getFonNumByFonLibelle(request.body.fonction, function(err, result){
                   if(err){
                     console.log(err);
                     return;
                   }
                   response.fon_num = result[0]['fon_num'];
+                  // On insert le salarié
                   var sal = {'per_num':response.per_num, 'fon_num':response.fon_num, 'sal_telprof':request.body.tel}
                   model.insertSalarie(sal, function(err, result){
                     if(err){
@@ -217,3 +229,59 @@ module.exports.SupprimerPersonne = function(request, response){
     });
   }
 }; 
+
+module.exports.ModifierPersonne = function(request, response){
+  response.title = 'Modifier une Personne';
+  if(request.body.num){
+    // Envoyer le formulaire de modification
+    response.num = request.body.num;
+    model.getPersonneById(request.body.num, function(err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      response.personne = result;
+      response.render('modifierPersonne', response);
+    });
+  }
+  else{
+    model.getListePersonne(function(err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      response.listePersonne = result;
+      response.nb = result.length;
+      response.render('modifierPersonne', response);
+    });
+  }
+};
+
+module.exports.PersonneModifiee = function(request, response){
+  response.title = 'Modifier une personne';
+  if(request.body.per_pwd){
+    // Crypter le mot de passe
+    var sha256 = crypto.createHash("sha256");
+    sha256.update(request.body.per_pwd, "utf8");
+    var pwd = sha256.digest("base64"); 
+    var pers = {'num': request.body.per_num, 'nom':request.body.per_nom, 'prenom':request.body.per_prenom, 'tel':request.body.per_ntel, 'mail':request.body.per_mail, 'login':request.body.per_login, 'pwd':pwd};
+  }
+  else{
+    var pers = {'num': request.body.per_num, 'nom':, 'prenom':, 'tel':, 'mail':, 'login':};
+  }
+  model.modifierPersonne(pers, function(err, result){
+    if(err){
+      console.log(err);
+      response.statu = 'La personne n\'a pu être modifiée.';
+      response.image = 'erreur.png';
+      response.res = 'Erreur';
+    }
+    else{
+      response.statu = 'La personne a bien été modifiée.';
+      response.image = 'valid.png';
+      result.res = 'Valide'
+    }
+    response.render('modifierPersonne', response);
+  });
+};
+

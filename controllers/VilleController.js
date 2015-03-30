@@ -18,7 +18,7 @@ var model = require('../models/ville.js');
      
 module.exports.ListerVille = function(request, response){
   response.title = 'Liste des villes';
-     
+  // on récupère les villes  
   model.getListeVille( function (err, result) {
     if (err) {
       // gestion de l'erreur
@@ -37,7 +37,7 @@ module.exports.AjouterVille = function(request, response){
 
   response.title = 'Ajouter des villes';
   response.etat = 'Ajout';
-	
+	// La vue doit afficher le formulaire d'ajout d'une ville
   response.render('ajoutVille', response);
 };  
  
@@ -47,12 +47,14 @@ module.exports.InsertVille = function(request, response){
   response.title = 'Insertion d\'une ville';
   var nom = request.body.nom;
   response.nom = nom;
+  // On vérifie que la ville n'existe pas déjà
   model.getVilleByName(nom, function(err, result){
     if(err){
       console.log(err);
       return;
     }
     if(result.length == 0){
+      // Elle n'existe pas, on l'insère
       model.insertVille(nom, function(err, result){
         if(err){
           console.log(err);
@@ -62,6 +64,7 @@ module.exports.InsertVille = function(request, response){
       });
     }
     else{
+      // Elle existe déjà
       response.erreur = "La ville a déjà été ajoutée."
       response.render('ajoutVille', response);
     }
@@ -74,15 +77,18 @@ module.exports.ModifierVille = function(request, response){
   response.title = 'Modifier une ville';
   if(request.body.vil_num){
     if(request.body.vil_nom){
+      // Si la ville à modifier est choisie et le nouveau nom saisi, on modifie le nom
       var data = {'num':request.body.vil_num, 'nom':request.body.vil_nom};
       model.modifierVille(data, function(err, result){
         if(err){
+          // Gestion d'une erreur de modification
           console.log(err);
           response.statu = 'La ville n\'a pas pu être modifiée !';
           response.img = 'erreur.png';
           response.res = 'Erreur';
         }
         else{
+          // Modification ok
           response.img = 'valid.png';
           response.res = 'Valide !';
           response.statu = 'La ville a bien été modifiée !';
@@ -91,11 +97,13 @@ module.exports.ModifierVille = function(request, response){
       });
     }
     else{
+      // Informer la vue qu'elle doit afficher le formulaire de modification
       response.num = request.body.vil_num;
       response.render('modifierVille', response);
     }
   }
   else{
+    // La ville à modifier n'est pas choisie, on récupère et envoie toutes les villes
     model.getListeVille(function(err, result){
       if(err){
         console.log(err);
@@ -110,6 +118,7 @@ module.exports.ModifierVille = function(request, response){
 module.exports.SupprimerVille = function(request, response){
   response.title = 'Supprimer une ville';
   if(request.body.vil_num){
+    // La ville à supprimer est choisie, on la supprime
     model.supprimerVille(request.body.vil_num, function(err, result){
       if(err){
         console.log(err);
@@ -127,6 +136,7 @@ module.exports.SupprimerVille = function(request, response){
     });
   }
   else{
+    // On récupère et envoie toutes les villes
     model.getListeVille(function(err, result){
       if(err){
         console.log(err);
