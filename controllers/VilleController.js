@@ -109,5 +109,32 @@ module.exports.ModifierVille = function(request, response){
 
 module.exports.SupprimerVille = function(request, response){
   response.title = 'Supprimer une ville';
-  response.render('supprimerVille', response);
+  if(request.body.vil_num){
+    model.supprimerVille(request.body.vil_num, function(err, result){
+      if(err){
+        console.log(err);
+        // Traitement de l'erreur
+        response.statu = 'La ville n\'a pas pu être supprimée !';
+        response.img = 'erreur.png';
+        response.res = 'Erreur';
+      }
+      else{
+        response.img = 'valid.png';
+        response.res = 'Valide !';
+        response.statu = 'La ville a bien été supprimée !';
+      }
+      response.render('supprimerVille', response);
+    });
+  }
+  else{
+    model.getListeVille(function(err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      response.listeVille = result;
+      response.nb = result.length;
+      response.render('supprimerVille', response);
+    });
+  }
 }; 

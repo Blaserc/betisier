@@ -53,3 +53,11 @@ module.exports.modifierVille = function (data, callback){
     }
   });
 };
+
+module.exports.supprimerVille = function (num, callback){
+  db.getConnection(function(err, connexion){
+    var req = "DELETE FROM ville WHERE vil_num = " + connexion.escape(num);
+    connexion.query(req, callback);
+    connexion.release();
+  });
+};
