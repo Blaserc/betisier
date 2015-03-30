@@ -151,6 +151,7 @@ module.exports.RechercherCitation = function(request, response){
           console.log(err);
           return;
         }
+        console.log(result);
         response.note = result;
         response.render('rechercherCitation', response);
       });
@@ -166,15 +167,18 @@ module.exports.Recherche = function(request, response){
         console.log(err);
         return;
       }
-      console.log(result);
+      console.log(result.length);
       if(result.length == 0){
-        var res = "Aucun résultat.";
+        response.res = "Aucun résultat.";
       }
       else{
         response.citation = result;
       }
       response.render('rechercheResultats', response);
     });
+  }
+  else{
+
   }
 };
 

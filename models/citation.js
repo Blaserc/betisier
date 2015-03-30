@@ -8,7 +8,7 @@ module.exports.getListeCitation = function (callback) {
         	  // execution de la requête SQL        	  
             connexion.query("SELECT c.cit_num, per_prenom, per_nom, cit_libelle, date_format(cit_date, '%d/%m/%Y') as cit_date, avg(vot_valeur) as moyenne " +
              'FROM citation c join personne p on c.per_num=p.per_num join vote v on c.cit_num = v.cit_num ' +
-             'WHERE cit_valide = 1 AND cit_date_valide IS NOT NULL ' +
+             'WHERE cit_valide = 1 AND cit_date_valide IS NOT NULL AND c.per_num IN (SELECT per_num FROM salarie)' +
              'GROUP BY per_nom, per_prenom, cit_libelle, cit_date, c.cit_num', callback);
             
             // la connexion retourne dans le pool
@@ -30,7 +30,7 @@ module.exports.getEnseignant = function (callback){
 module.exports.getEnseignantCitVal = function (callback){
     db.getConnection(function(err, connexion){
         if(!err){
-            var req = "SELECT per_nom FROM personne p JOIN citation c ON p.per_num=c.per_num WHERE cit_date_valide is not null AND cit_valide = 1 AND p.per_num IN (SELECT per_num FROM salarie)";
+            var req = "SELECT DISTINCT per_nom FROM personne p JOIN citation c ON p.per_num=c.per_num WHERE cit_date_valide is not null AND cit_valide = 1 AND p.per_num IN (SELECT per_num FROM salarie)";
             connexion.query(req, callback);
             connexion.release();
         }
@@ -71,7 +71,7 @@ module.exports.getCitVotees = function(data, callback){
 module.exports.getDates = function(callback){
   db.getConnection(function(err, connexion){
     if(!err){
-      var req = "SELECT distinct(date_format(cit_date, '%d/%m/%Y')) as cit_date FROM citation c WHERE cit_date_valide is not null AND cit_valide = 1";
+      var req = "SELECT DISTINCT date_format(cit_date, '%d/%m/%Y') as cit_date FROM citation WHERE cit_date_valide IS NOT NULL AND cit_valide = 1";
       connexion.query(req, callback);
       connexion.release();
     }
@@ -81,9 +81,10 @@ module.exports.getDates = function(callback){
 module.exports.getNotes = function(callback){
   db.getConnection(function(err, connexion){
     if(!err){
-      var req = "SELECT distinct(vot_valeur) FROM vote v JOIN citation c ON v.cit_num=c.cit_num"+
+      var req = "SELECT DISTINCT avg(vot_valeur) as vot_valeur FROM vote v JOIN citation c ON v.cit_num=c.cit_num"+
       " JOIN personne p ON p.per_num=c.per_num WHERE cit_date_valide is not null AND cit_valide = 1 AND"+
-      " p.per_num IN (SELECT per_num FROM salarie)";
+      " p.per_num IN (SELECT per_num FROM salarie)"+
+      " GROUP BY v.cit_num";
       connexion.query(req, callback);
       connexion.release();
     }
