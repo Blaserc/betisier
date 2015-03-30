@@ -24,6 +24,7 @@ module.exports = function(app){
     app.get('/rechercherCitation', CitationController.RechercherCitation);
     app.post('/verifierCitation', CitationController.VerifierCitation);
     app.get('/validerCitation', CitationController.ValiderCitation);
+    app.post('/validerCitation', CitationController.ValiderCitation);
     app.get('/supprimerCitation', CitationController.SupprimerCitation);
     app.post('/noterCitation', CitationController.NoterCitation);
     app.post('/suppressionCitation', CitationController.SupprimerCitation);
@@ -36,6 +37,7 @@ module.exports = function(app){
    app.get('/modifierVille', VilleController.ModifierVille);
    app.post('/modifierVille', VilleController.ModifierVille);
    app.get('/supprimerVille', VilleController.SupprimerVille);
+   app.post('/supprimerVille', VilleController.SupprimerVille);
 
  //personne
    app.get('/listerPersonne', PersonneController.ListerPersonne);
@@ -54,7 +56,7 @@ module.exports = function(app){
 
 function testConnecte(request, response, next){
   if(request.session.login || request.originalUrl == '/listerPersonne' || request.originalUrl == '/listerCitation' || request.originalUrl =='/listerVille'){
-    if(request.originalUrl == '/validerCitation' || request.originalUrl == '/supprimerPersonne' || request.originalUrl == '/supprimerCitation' || request.originalUrl == '/supprimerVille')
+    (request.originalUrl == '/validerCitation' || request.originalUrl == '/supprimerPersonne' || request.originalUrl == '/supprimerCitation' || request.originalUrl == '/supprimerVille')
     {
       if (request.session.admin == 1) {
         next();
@@ -63,7 +65,7 @@ function testConnecte(request, response, next){
       };
     }else{
       next();
-    }  
+    }
   }else{
     response.redirect('/');   
   }

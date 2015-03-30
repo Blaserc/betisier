@@ -176,14 +176,43 @@ module.exports.Recherche = function(request, response){
       response.render('rechercheResultats', response);
     });
   }
-  else{
-
-  }
 };
 
 module.exports.ValiderCitation = function(request, response){
   response.title = 'Valider une citation';
-  response.render('validerCitation', response);
+  if(request.body.cit_num){
+    // On veut valider une citation
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    if(dd<10) {
+        dd='0'+dd;
+    } 
+    if(mm<10) {
+        mm='0'+mm;
+    }
+    var date_val = yyyy+'-'+mm+'-'+dd;
+    model.validerCitation(request.body.cit_num, date_val, request.session.num, function(err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      response.img = 'valid.png';
+      response.res = 'Valide !';
+      response.statu = 'La citation a bien été validée !';
+      response.render('validerCitation', response);
+    });
+  }
+  model.getCitNonValides(function(err, result){
+    if(err){
+      console.log(err);
+      return;
+    }
+    response.citNonVal = result;
+    response.nb = result.length;
+    response.render('validerCitation', response);
+  });
 }; 
 
 module.exports.SupprimerCitation = function(request, response){

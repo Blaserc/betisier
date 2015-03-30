@@ -1,3 +1,36 @@
 {{> enTete}}
 {{> menu}}		
 <h1> {{title}}</h1>
+
+{{#if res}}
+	<p><img src="/image/{{img}}" alt="{{res}}" > {{statu}}</p>
+	<p>Redirection automatique dans 2 secondes. </p>
+	<script type="text/javascript">   
+	function Redirect() 
+	{  
+		window.location="/validerCitation"; 
+	} 
+	setTimeout('Redirect()', 2000);   
+	</script>
+{{else}}
+	<p>Il y a actuellement {{nb}} citations non validées.</p>
+	<table>
+		<tr>
+			<th>Enseignant</th>
+			<th>Libellé</th>
+			<th>Date</th>
+			<th></th>
+		</tr>
+		<form>
+			{{#each citNonVal}}
+				<input type='int' name='cit_num' value='{{this.cit_num}}'>
+				<tr>
+					<td>{{this.per_prenom}} {{this.per_nom}}</td>
+					<td>{{cit_libelle}}</td>
+					<td>{{this.cit_dat}}</td>
+					<td><input value='submit' src='image/valid.png' type='image'></td>
+				</tr>
+			{{/each}}
+		</form>
+	</table>
+{{/if}}

@@ -91,22 +91,6 @@ module.exports.getNotes = function(callback){
   });
 };
 
-/*module.exports.getCitByProf = function(data, callback){
-  db.getConnection(function(err, connexion){
-    if(!err){
-      // s'il n'y a pas d'erreur de connexion
-      // execution de la requête SQL 
-      var req = "SELECT c.cit_num, per_prenom, per_nom, cit_libelle, date_format(cit_date, '%d/%m/%Y') as cit_date, avg(vot_valeur) as moyenne " +
-             'FROM citation c join personne p on c.per_num=p.per_num join vote v on c.cit_num = v.cit_num ' +
-             'WHERE cit_valide = 1 AND per_nom = ' + connexion.escape(data) + " AND cit_date_valide IS NOT NULL " +
-             "GROUP BY per_nom, per_prenom, cit_libelle, cit_date, c.cit_num";
-      connexion.query(req, callback);
-      // la connexion retourne dans le pool
-      connexion.release();
-    }
-  }); 
-};*/
-
 module.exports.suprCitation = function(data, callback){
     db.getConnection(function(err, connexion){
         if(!err){
@@ -160,4 +144,27 @@ module.exports.getResu = function(prof, date, note, callback){
       connexion.release();
     }
   }); 
+};
+
+module.exports.getCitNonValides = function(data, callback){
+  db.getConnection(function(err, connexion){
+    if(!err){
+      var req = "SELECT c.cit_num, per_nom, per_prenom, cit_libelle, date_format(cit_date, '%d/%m/%Y') as cit_date" +
+      " FROM citation c JOIN personne p ON c.per_num = p.per_num" +
+      " WHERE cit_valide = 0";
+      connexion.query(req, callback);
+      connexion.release();
+    }
+  });
+};
+
+module.exports.validerCitation = function(cit_num, date, num_admin, callback){
+  db.getConnection(function(err, connexion){
+    if(!err){
+      var req = "UPDATE citation SET cit_valide = 1, per_num_valide = " + connexion.escape(num_admin) + ", cit_date_valide = " + connexion.escape(date) +
+      " WHERE cit_num = " + connexion.escape(cit_num);
+      connexion.query(req, callback);
+      connexion.release();
+    }
+  });
 };
