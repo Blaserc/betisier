@@ -34,6 +34,7 @@ module.exports = function(app){
    app.get('/ajouterVille', VilleController.AjouterVille);
    app.post('/villeAjoutee', VilleController.InsertVille);
    app.get('/modifierVille', VilleController.ModifierVille);
+   app.post('/modifierVille', VilleController.ModifierVille);
    app.get('/supprimerVille', VilleController.SupprimerVille);
 
  //personne

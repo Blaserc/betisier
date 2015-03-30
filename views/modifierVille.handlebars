@@ -1,3 +1,45 @@
 {{> enTete}}
 {{> menu}}
 <h1>Modifier une ville</h1>
+
+{{#if listeVille}}
+	<table>
+	    <tr>
+	    	<th>Nom</th>
+	    	<th></th>
+	    	
+	    </tr>                       
+	{{#each listeVille}}
+		<form action="/modifierVille" method="POST">
+		    <tr>
+		    	<input type='int' name='vil_num' value='{{this.vil_num}}' hidden>
+		    	<td>{{this.vil_nom}}</td>
+		    	<td><input type='submit' src='image/modifier.png' type='image'></td>
+		    </tr>
+		</form>
+	{{/each}}
+	</table>
+{{else}}
+	{{#if res}}
+	<p><img src="/image/{{img}}" alt="{{res}}" > {{statu}}</p>
+ 	<p>Redirection automatique dans 2 secondes. </p>
+	<script type="text/javascript">   
+		function Redirect() 
+		{
+			window.location="/modifierVille";
+		}
+		setTimeout('Redirect()', 2000);
+		</script>
+	{{else}}
+		{{#if num}}
+		<div>Modifier la ville numéro {{num}}.</div>
+		<form action='/modifierVille' method='POST'>
+			<input type='text' name='vil_num' value={{num}} hidden>
+			<label>Nouveau nom de la ville</label>
+			<br>
+			<input type='text' name='vil_nom'>
+			<input type='submit' value='Envoyer'>
+		</form>
+		{{/if}}		
+	{{/if}}
+{{/if}}

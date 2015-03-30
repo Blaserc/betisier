@@ -72,7 +72,39 @@ module.exports.InsertVille = function(request, response){
      
 module.exports.ModifierVille = function(request, response){
   response.title = 'Modifier une ville';
-  response.render('modifierVille', response);
+  if(request.body.vil_num){
+    if(request.body.vil_nom){
+      var data = {'num':request.body.vil_num, 'nom':request.body.vil_nom};
+      model.modifierVille(data, function(err, result){
+        if(err){
+          console.log(err);
+          response.statu = 'La ville n\'a pas pu être modifiée !';
+          response.img = 'erreur.png';
+          response.res = 'Erreur';
+        }
+        else{
+          response.img = 'valid.png';
+          response.res = 'Valide !';
+          response.statu = 'La ville a bien été modifiée !';
+        }
+        response.render('modifierVille', response);
+      });
+    }
+    else{
+      response.num = request.body.vil_num;
+      response.render('modifierVille', response);
+    }
+  }
+  else{
+    model.getListeVille(function(err, result){
+      if(err){
+        console.log(err);
+        return;
+      }
+      response.listeVille = result;
+      response.render('modifierVille', response);
+    });
+  }
 }; 
 
 module.exports.SupprimerVille = function(request, response){

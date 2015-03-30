@@ -43,3 +43,13 @@ module.exports.insertVille = function (data, callback) {
     }
   });
 };
+
+module.exports.modifierVille = function (data, callback){
+  db.getConnection(function(err, connexion){
+    if(!err){
+      var req = "UPDATE ville SET vil_nom = "+ connexion.escape(data.nom) +" WHERE vil_num = "+ data.num +";";
+      connexion.query(req, callback);
+      connexion.release();
+    }
+  });
+};
